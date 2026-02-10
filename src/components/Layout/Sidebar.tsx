@@ -13,15 +13,21 @@ const colors = {
   navy: "#003A66",
 };
 
-export default function AppSidebar() {
+interface Props {
+  collapsed: boolean;
+}
+
+export default function AppSidebar({ collapsed }: Props) {
   const pathname = usePathname();
 
   return (
     <Sider
       width={260}
+      collapsed={collapsed}       // controlled collapse
+      collapsedWidth={0}          // hide completely when collapsed
       breakpoint="lg"
-      collapsedWidth="0"
       style={{ background: colors.navy, boxShadow: "4px 0 10px rgba(0,0,0,0.05)", zIndex: 10 }}
+      trigger={null}              // <-- remove built-in button
     >
       <div
         style={{
@@ -44,10 +50,10 @@ export default function AppSidebar() {
             fontWeight: "bold",
           }}
         >
-          F
+          S
         </div>
         <span style={{ color: "#fff", fontSize: 18, fontWeight: 700, letterSpacing: -0.5 }}>
-          FinTech<span style={{ color: colors.primary }}>Pro</span>
+          Smart<span style={{ color: colors.primary }}>Link</span>
         </span>
       </div>
 
