@@ -1,267 +1,137 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
-import dynamic from "next/dynamic";
-import { useRouter } from 'next/navigation';
-import { Form, Input, Button, Card, Steps, Typography, Tag, ConfigProvider } from 'antd';
-import { Smartphone, Monitor, UserCheck, ShieldCheck, ArrowRight } from 'lucide-react';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import React, { useState } from "react";
+import { Card, Steps, ConfigProvider, Typography } from "antd";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
-const OTPInput = dynamic(() => import("react-otp-input"), { ssr: false });
-const { Title, Text, Paragraph } = Typography;
+import RegistrationForm from "@/src/components/register/RegistrationForm";
+import ConfirmationForm from "@/src/components/register/ConfirmationForm";
+import VerificationForm from "@/src/components/register/VerificationForm";
+import { ShieldCheck, Monitor } from "lucide-react";
+
+const { Title, Paragraph, Text } = Typography;
 
 export default function MerchantOnboarding() {
-  const router = useRouter();
   const [step, setStep] = useState(0);
-  const [form] = Form.useForm();
-  const [otp, setOtp] = useState('');
-  const [timer, setTimer] = useState(45);
-  const [loading, setLoading] = useState(false);
+  const [formData, setFormData] = useState<{
+    name?: string;
+    mobile?: string;
+    email?: string;
+    password?: string;
+  }>({});
 
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
-    if (step === 1 && timer > 0) {
-      interval = setInterval(() => setTimer((prev) => prev - 1), 1000);
-    }
-    return () => clearInterval(interval);
-  }, [step, timer]);
-
-  const handleSignup = () => setStep(1);
-
-  const handleStepChange = (targetStep: number) => {
-    if (targetStep === 0) {
-      setStep(0);
-    } else if (targetStep === 1) {
-      form.validateFields()
-        .then(() => setStep(1))
-        .catch(() => console.log("Complete form first"));
-    }
+  // move forward from Registration to Confirmation
+  const handleNext = (data: { name: string; mobile: string; email?: string; password: string; confirmPassword: string }) => {
+    setFormData(data); // store entire registration data
+    setStep(1); // go to confirmation step
   };
 
-  const handleVerify = () => {
-    if (otp.length === 6) {
-      setLoading(true);
-      toast.success("OTP Verified! Redirecting to Dashboard...", {
-        position: "top-right",
-        autoClose: 1500,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        theme: "colored",
-      });
-      setTimeout(() => {
-        router.push('/dashboard'); 
-      }, 2000);
-    } else {
-      toast.error("Please enter a valid 6-digit code.");
-    }
+  // move forward from Confirmation to Verification
+  const handleConfirm = () => {
+    setStep(2);
   };
 
-  const handleResend = () => {
-    setTimer(45);
-    setOtp('');
-    toast.info("A new code has been sent to your mobile.");
+  // Allow clicking steps to go back (but prevent skipping forward)
+  const handleStepClick = (targetStep: number) => {
+    if (targetStep < step) {
+      setStep(targetStep);
+    }
   };
 
   return (
     <ConfigProvider
       theme={{
         token: {
-          colorPrimary: '#0066B3',
-          colorInfo: '#0066B3',
-          borderRadius: 8,
-          fontFamily: 'Inter, sans-serif',
+          colorPrimary: "#0066B3",
+          borderRadius: 10,
+          fontFamily: "Inter, sans-serif",
         },
       }}
     >
-      <main className="min-h-screen bg-slate-100 flex items-center justify-center p-4 md:p-10">
+      <main className="h-screen w-screen flex bg-slate-100">
         <ToastContainer />
-        
-        <Card
-          className="max-w-5xl w-full overflow-hidden border-none shadow-2xl"
-          styles={{ body: { padding: 0 } }}
-        >
-          <div className="flex flex-col md:flex-row min-h-[600px]">
 
-            {/* Left Column */}
-            <div className="md:w-2/5 bg-[#001529] p-10 text-white flex flex-col justify-between">
-              <div>
-                <div className="flex items-center gap-3 mb-12">
-                  <div className="w-10 h-10 bg-[#0066B3] rounded-lg flex items-center justify-center shadow-lg">
-                    <ShieldCheck className="text-white" size={24} />
-                  </div>
-                  <span className="text-xl font-bold tracking-tight">
-                    Smart <span className="text-[#0066B3]">Link</span>
-                  </span>
-                </div>
-                <Title level={2} className="!text-white !mb-8 !font-bold">Scale your business faster.</Title>
-                <div className="space-y-4">
-                  <EntryPoint icon={<Monitor size={18} />} title="Web Portal" active />
-                  <EntryPoint icon={<Smartphone size={18} />} title="Mobile Application" />
-                  <EntryPoint icon={<UserCheck size={18} />} title="Agent Assisted" />
-                </div>
+        {/* LEFT BRAND PANEL */}
+        <section className="hidden md:flex w-2/5 bg-[#001529] p-12 text-white flex-col justify-between">
+          <div>
+            {/* Logo */}
+            <div className="flex items-center gap-3 mb-16">
+              <div className="w-11 h-11 bg-[#0066B3] rounded-lg flex items-center justify-center shadow-lg">
+                <ShieldCheck size={24} />
               </div>
-              <div className="mt-12 p-5 bg-white/5 rounded-xl border border-white/10 backdrop-blur-sm">
-                <Text className="!text-blue-300 text-[10px] block mb-2 uppercase tracking-[0.2em] font-bold">Security Status</Text>
-                <Tag color="error" className="animate-pulse m-0 px-3 py-1 rounded-full border-none font-medium">Account: Unverified</Tag>
-              </div>
+              <span className="text-xl font-bold">
+                Smart <span className="text-[#0066B3]">Link</span>
+              </span>
             </div>
 
-            {/* Right Column */}
-            <div className="md:w-3/5 p-8 md:p-14 bg-white">
-              <div className="mb-10">
-                <Steps
-                  current={step}
-                  onChange={handleStepChange}
-                  size="small"
-                  className="cursor-pointer"
-                  items={[{ title: 'Registration' }, { title: 'Verification', disabled: step === 0 }]}
-                />
-              </div>
+            {/* Headline & Paragraph */}
+            <div>
+              <Title level={2} className="!text-white !mb-4 !font-bold">
+                Scale your business faster
+              </Title>
+              <Paragraph className="!text-slate-300">
+                Get onboarded in minutes and start accepting payments securely.
+              </Paragraph>
+            </div>
 
-              {step === 0 ? (
-                <div className="animate-in fade-in slide-in-from-right-4 duration-500">
-                  <div className="mb-8">
-                    <Title level={3} className="!text-[#001529] !mb-2">Create Account</Title>
-                    <Paragraph className="text-slate-500">Enter your credentials to secure your merchant profile.</Paragraph>
-                  </div>
-                  <Form layout="vertical" form={form} onFinish={handleSignup} requiredMark={false}>
-                    {/* Name Field */}
-                    <Form.Item 
-                      label={<span className="font-semibold text-slate-700">Full Name</span>}
-                      name="name"
-                      rules={[{ required: true, message: 'Please enter your full name' }]}
-                    >
-                      <Input size="large" placeholder="John Doe" className="h-12" />
-                    </Form.Item>
-
-                    {/* Mobile Number Field */}
-                    <Form.Item 
-                      label={<span className="font-semibold text-slate-700">Mobile Number</span>}
-                      name="mobile"
-                      rules={[
-                        { required: true, message: 'Mobile number is required' },
-                        { pattern: /^[0-9]{10}$/, message: 'Mobile number must be exactly 10 digits' }
-                      ]}
-                    >
-                      <Input
-                        size="large"
-                        prefix={<span className="text-slate-400 mr-1 font-medium">+977</span>}
-                        placeholder="981014xxxx"
-                        className="h-12"
-                        maxLength={10}
-                        type="tel"
-                      />
-                    </Form.Item>
-
-                    {/* Email Field */}
-                    <Form.Item 
-                      label={<span className="font-semibold text-slate-700">Business Email</span>}
-                      name="email"
-                      rules={[{ type: 'email', message: 'Please enter a valid email' }]}
-                    >
-                      <Input size="large" placeholder="name@business.com" className="h-12" />
-                    </Form.Item>
-
-                    {/* Password Field */}
-                    <Form.Item 
-                      label={<span className="font-semibold text-slate-700">Password</span>}
-                      name="password"
-                      rules={[{ required: true, message: 'Please create a password' }]}
-                      hasFeedback
-                    >
-                      <Input.Password size="large" placeholder="••••••••" className="h-12" />
-                    </Form.Item>
-
-                    {/* Password Confirmation Field */}
-                    <Form.Item
-                      label={<span className="font-semibold text-slate-700">Confirm Password</span>}
-                      name="confirmPassword"
-                      dependencies={['password']}
-                      hasFeedback
-                      rules={[
-                        { required: true, message: 'Please confirm your password' },
-                        ({ getFieldValue }) => ({
-                          validator(_, value) {
-                            if (!value || getFieldValue('password') === value) {
-                              return Promise.resolve();
-                            }
-                            return Promise.reject(new Error('Passwords do not match'));
-                          },
-                        }),
-                      ]}
-                    >
-                      <Input.Password size="large" placeholder="••••••••" className="h-12" />
-                    </Form.Item>
-
-                    <Button type="primary" htmlType="submit" size="large" block className="h-12 mt-6 font-bold flex items-center justify-center gap-2 transition-all hover:translate-x-1">
-                      Continue to Verification <ArrowRight size={18} />
-                    </Button>
-                  </Form>
-                </div>
-              ) : (
-                <div className="animate-in zoom-in-95 duration-300 text-center py-4">
-                  <div className="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <Smartphone className="text-[#0066B3]" size={36} />
-                  </div>
-                  <Title level={3} className="!text-[#001529] !mb-2">Verify Phone</Title>
-                  <Paragraph className="mb-10 text-slate-500">
-                    We've sent a 6-digit code to <br/>
-                    <Text strong className="text-[#0066B3]">{form.getFieldValue('mobile') || '+977 981014xxxx'}</Text>
-                  </Paragraph>
-
-                  <div className="flex justify-center mb-10">
-                    <OTPInput
-                      value={otp}
-                      onChange={setOtp}
-                      numInputs={6}
-                      renderInput={(props) => (
-                        <input
-                          {...props}
-                          className="!w-12 h-14 text-2xl font-bold border-2 rounded-lg transition-all 
-                                     outline-none focus:border-[#0066B3] focus:ring-4 focus:ring-blue-100
-                                     border-slate-200 text-[#001529] bg-slate-50"
-                        />
-                      )}
-                      containerStyle="flex gap-3 justify-center"
-                      inputType="tel"
-                    />
-                  </div>
-
-                  <Button 
-                    type="primary" 
-                    size="large" 
-                    block 
-                    className="h-12 bg-[#001529] mb-4 font-bold disabled:opacity-50"
-                    onClick={handleVerify}
-                    disabled={otp.length < 6}
-                    loading={loading}
-                  >
-                    Verify & Access Dashboard
-                  </Button>
-                  
-                  <div className="flex flex-col items-center">
-                    <Button type="link" className="text-[#0066B3] font-medium" disabled={timer > 0 || loading} onClick={handleResend}>
-                      {timer > 0 ? `Resend code in ${timer}s` : "Resend Verification Code"}
-                    </Button>
-                  </div>
-                </div>
-              )}
+            {/* Entry Points */}
+            <div className="mt-10 space-y-4">
+              <EntryPoint icon={<Monitor size={18} />} title="Web Portal" active />
             </div>
           </div>
-        </Card>
+
+          {/* Security Status Box */}
+          <div className="p-5 bg-white/5 rounded-xl border border-white/10 mt-10">
+            <Text className="!text-blue-300 text-xs uppercase tracking-widest font-bold">
+              Security Status
+            </Text>
+            <Text className="!text-green-400 block mt-1">Account Unverified</Text>
+          </div>
+        </section>
+
+        {/* RIGHT CONTENT */}
+        <section className="flex-1 flex items-center justify-center px-4">
+          <Card
+            className="w-full max-w-lg shadow-2xl border-none"
+            bodyStyle={{ padding: "2.5rem" }}
+          >
+            <div className="min-h-[650px] flex flex-col justify-between">
+              {/* Steps */}
+              <Steps
+                current={step}
+                size="small"
+                className="mb-8 cursor-pointer"
+                onChange={handleStepClick}
+                items={[
+                  { title: "Registration" },
+                  { title: "Confirmation", disabled: step === 0 },
+                  { title: "Verification", disabled: step < 2 },
+                ]}
+              />
+
+              {/* Step Forms */}
+              {step === 0 && <RegistrationForm onNext={handleNext} />}
+              {step === 1 && <ConfirmationForm formData={formData} onConfirm={handleConfirm} />}
+              {step === 2 && <VerificationForm mobile={formData.mobile || ""} />}
+            </div>
+          </Card>
+        </section>
       </main>
     </ConfigProvider>
   );
 }
 
-function EntryPoint({ icon, title, active = false }: { icon: React.ReactNode, title: string, active?: boolean }) {
+// ENTRY POINT COMPONENT
+function EntryPoint({ icon, title, active = false }: { icon: React.ReactNode; title: string; active?: boolean }) {
   return (
-    <div className={`flex items-center gap-4 p-4 rounded-xl transition-all cursor-default ${active ? 'bg-[#0066B3]/20 border border-[#0066B3]/30' : 'opacity-50 hover:opacity-100'}`}>
-      <div className={`${active ? 'text-[#0066B3]' : 'text-white'}`}>{icon}</div>
-      <span className={`text-sm ${active ? 'font-bold' : 'font-medium'}`}>{title}</span>
+    <div
+      className={`flex items-center gap-4 p-4 rounded-xl ${
+        active ? "bg-[#0066B3]/20 border border-[#0066B3]/30" : "opacity-60"
+      }`}
+    >
+      <div className={active ? "text-[#0066B3]" : "text-white"}>{icon}</div>
+      <span className={active ? "font-bold" : "font-medium"}>{title}</span>
     </div>
   );
 }

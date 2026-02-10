@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { Form, Input, Button, Card, Typography, ConfigProvider } from 'antd';
-import { ShieldCheck, ArrowRight, UserPlus } from 'lucide-react';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Form, Input, Button, Card, Typography, ConfigProvider } from "antd";
+import { ShieldCheck, ArrowRight, UserPlus,Headphones,Zap,Phone,CheckCircle2,Lock } from "lucide-react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const { Title, Paragraph, Text } = Typography;
 
@@ -14,142 +14,200 @@ export default function MerchantLogin() {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
 
-  const handleLogin = (values: any) => {
+  const handleLogin = () => {
     setLoading(true);
     setTimeout(() => {
-      toast.success("Login Successful! Redirecting...", {
-        position: "top-right",
-        autoClose: 1500,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        theme: "colored",
-      });
-      router.push('/dashboard');
+      toast.success("Login Successful! Redirecting...");
+      router.push("/dashboard");
     }, 1500);
-  };
-
-  const goToRegistration = () => {
-    router.push('/register'); // Redirect to your registration page
   };
 
   return (
     <ConfigProvider
       theme={{
         token: {
-          colorPrimary: '#0066B3',
-          colorInfo: '#0066B3',
-          borderRadius: 8,
-          fontFamily: 'Inter, sans-serif',
+          colorPrimary: "#0066B3",
+          borderRadius: 10,
+          fontFamily: "Inter, sans-serif",
         },
       }}
     >
-      <main className="min-h-screen bg-slate-100 flex items-center justify-center p-4 md:p-10">
+      <main className="h-screen w-screen flex bg-slate-100">
         <ToastContainer />
 
-                  <Card
-            className="max-w-5xl w-full overflow-hidden border-none shadow-2xl"
-            styles={{
-              body: {
-                padding: 0,
-                backgroundColor: 'transparent',
-              },
-            }}
-          >
-          <div className="flex flex-col md:flex-row min-h-[500px]">
-
-            {/* Left Column */}
-            <div className="md:w-2/5 bg-[#001529] p-10 text-white flex flex-col justify-between">
-              <div>
-                <div className="flex items-center gap-3 mb-12">
-                  <div className="w-10 h-10 bg-[#0066B3] rounded-lg flex items-center justify-center shadow-lg">
-                    <ShieldCheck className="text-white" size={24} />
-                  </div>
-                  <span className="text-xl font-bold tracking-tight">
-                    Smart <span className="text-[#0066B3]">Link</span>
-                  </span>
-                </div>
-                <Title level={2} className="!text-white !mb-6 !font-bold">Welcome Back!</Title>
-                <Paragraph className="!text-slate-100 text-base leading-relaxed">
-                  Log in to access your merchant dashboard and manage your business efficiently.
-                </Paragraph>
+        {/* LEFT BRAND PANEL */}
+        <section className="hidden md:flex w-2/5 bg-[#001529] p-12 text-white flex-col justify-between">
+          <div>
+            <div className="flex items-center gap-3 mb-16">
+              <div className="w-11 h-11 bg-[#0066B3] rounded-lg flex items-center justify-center shadow-lg">
+                <ShieldCheck size={24} />
               </div>
-              <div className="mt-12 p-5 bg-white/5 rounded-xl border border-white/10 backdrop-blur-sm">
-                <Text className="!text-blue-300 text-[10px] block mb-2 uppercase tracking-[0.2em] font-bold">Security Status</Text>
-                <Text className="!text-red-400 font-medium">Account: Secure</Text>
-              </div>
+              <span className="text-xl font-bold">
+                Smart <span className="text-[#0066B3]">Link</span>
+              </span>
             </div>
 
-            {/* Right Column */}
-            <div className="md:w-3/5 p-8 md:p-14 bg-white flex flex-col justify-center">
-              <div className="mb-8 text-center">
-                <Title level={3} className="!text-[#001529] !mb-2">Login to your Account</Title>
-                <Paragraph className="text-slate-500">Enter your mobile number and password to continue.</Paragraph>
+            <Title level={2} className="!text-white !font-bold !mb-4">
+              Welcome Back!
+            </Title>
+            <Paragraph className="!text-slate-300 text-base">
+              Access your merchant dashboard and manage payments, settlements,
+              and reports in one place.
+            </Paragraph>
+
+            {/* STATS */}
+            <div className="mt-12 grid grid-cols-2 gap-4">
+              <div className="!bg-white/5 rounded-xl p-4">
+                <Text className="!text-2xl !font-bold !text-white">10K+</Text>
+                <Text className="!block !text-xs !text-slate-300">
+                  Active Merchants
+                </Text>
               </div>
-
-              <Form layout="vertical" form={form} onFinish={handleLogin} requiredMark={false}>
-                {/* Mobile Number with 10-digit validation */}
-                <Form.Item 
-                  label={<span className="font-semibold text-slate-700">Mobile Number</span>}
-                  name="mobile"
-                  rules={[
-                    { required: true, message: 'Mobile number is required' },
-                    { pattern: /^[0-9]{10}$/, message: 'Mobile number must be exactly 10 digits' }
-                  ]}
-                >
-                  <Input 
-                    size="large" 
-                    prefix={<span className="text-slate-400 mr-1 font-medium">+977</span>} 
-                    placeholder="981014xxxx" 
-                    className="h-12" 
-                    maxLength={10} // Optional: limit typing to 10 digits
-                  />
-                </Form.Item>
-
-                <Form.Item 
-                  label={<span className="font-semibold text-slate-700">Password</span>} 
-                  name="password" 
-                  rules={[{ required: true, message: 'Please enter your password' }]}
-                >
-                  <Input.Password size="large" placeholder="••••••••" className="h-12" />
-                </Form.Item>
-
-                <Button 
-                  type="primary" 
-                  htmlType="submit" 
-                  size="large" 
-                  block 
-                  className="h-12 mt-6 font-bold flex items-center justify-center gap-2 transition-all hover:translate-x-1"
-                  loading={loading}
-                >
-                  Login <ArrowRight size={18} />
-                </Button>
-              </Form>
-
-              <div className="mt-6 text-center flex flex-col gap-2">
-                {/* <Button 
-                  type="link" 
-                  className="text-[#0066B3] font-medium" 
-                  onClick={() => toast.info("Redirecting to password recovery...")}
-                >
-                  Forgot Password?
-                </Button> */}
-
-                {/* New Registration Button */}
-                <Button 
-                  type="default" 
-                  icon={<UserPlus size={16} />} 
-                  onClick={goToRegistration} 
-                  className="text-[#0066B3] font-medium border-[#0066B3] hover:bg-[#0066B3]/10"
-                >
-                  Create Account
-                </Button>
+              <div className="bg-white/5 rounded-xl p-4">
+                <Text className="!text-2xl !font-bold !text-white">₹5M+</Text>
+                <Text className="!block !text-xs !text-slate-300">
+                  Monthly Volume
+                </Text>
               </div>
             </div>
-
           </div>
-        </Card>
+
+          {/* SECURITY */}
+          <div className="p-5 bg-white/5 rounded-xl border border-white/10">
+            <Text className="!text-blue-300 text-xs uppercase tracking-widest font-bold">
+              Security Status
+            </Text>
+            <Text className="!text-red-500 block mt-1">
+              Account Secure
+            </Text>
+          </div>
+        </section>
+
+        {/* RIGHT LOGIN PANEL */}
+        <section className="flex-1 flex items-center justify-center px-4 py-12">
+        <div className="w-full max-w-md bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-slate-100 p-8">
+          
+          {/* HEADER */}
+          <div className="text-center mb-8">
+            <div className="w-16 h-16 bg-slate-900 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-slate-200">
+              <ShieldCheck size={32} className="text-white" />
+            </div>
+            <Title level={2} className="!text-2xl !font-extrabold !text-slate-900 !mb-2">
+              Welcome Back
+            </Title>
+            <Paragraph className="text-slate-500 font-medium">
+              Enter your credentials to access your dashboard
+            </Paragraph>
+          </div>
+
+          {/* TRUST METRICS - Modernized into "Pill" stats */}
+          <div className="grid grid-cols-3 gap-2 mb-8">
+            <div className="bg-slate-50 border border-slate-100 rounded-xl p-2 text-center">
+              <div className="flex justify-center mb-1 text-indigo-500"><Headphones size={14} /></div>
+              <Text className="block text-xs font-bold text-slate-800">24/7</Text>
+              <Text className="text-[10px] uppercase tracking-tighter text-slate-400 font-bold">Support</Text>
+            </div>
+            <div className="bg-slate-50 border border-slate-100 rounded-xl p-2 text-center">
+              <div className="flex justify-center mb-1 text-green-500"><Zap size={14} /></div>
+              <Text className="block text-xs font-bold text-slate-800">99.9%</Text>
+              <Text className="text-[10px] uppercase tracking-tighter text-slate-400 font-bold">Uptime</Text>
+            </div>
+            <div className="bg-slate-50 border border-slate-100 rounded-xl p-2 text-center">
+              <div className="flex justify-center mb-1 text-blue-500"><ShieldCheck size={14} /></div>
+              <Text className="block text-xs font-bold text-slate-800">Secure</Text>
+              <Text className="text-[10px] uppercase tracking-tighter text-slate-400 font-bold">Encrypted</Text>
+            </div>
+          </div>
+
+          {/* FORM */}
+          <Form
+            layout="vertical"
+            form={form}
+            onFinish={handleLogin}
+            requiredMark={false}
+            className="space-y-1"
+          >
+            <Form.Item
+              label={<span className="text-slate-600 font-semibold ml-1">Mobile Number</span>}
+              name="mobile"
+              rules={[
+                { required: true, message: "Required" },
+                { pattern: /^[0-9]{10}$/, message: "10 digits required" },
+              ]}
+            >
+              <Input
+                size="large"
+                prefix={
+                  <div className="flex items-center gap-2 pr-2 border-r border-slate-200 mr-2">
+                    <Phone size={18} className="text-slate-400" />
+                    <span className="text-slate-500 font-medium">+977</span>
+                  </div>
+                }
+                placeholder="981014xxxx"
+                maxLength={10}
+                className="rounded-lg border-slate-200"
+              />
+            </Form.Item>
+
+            <Form.Item
+              label={<span className="text-slate-600 font-semibold ml-1">Password</span>}
+              name="password"
+              rules={[{ required: true, message: "Enter your password" }]}
+            >
+              <Input.Password 
+                size="large" 
+                placeholder="••••••••" 
+                prefix={<Lock size={18} className="text-slate-400 mr-2" />}
+                className="rounded-lg border-slate-200"
+              />
+            </Form.Item>
+
+            <div className="flex justify-end mb-4">
+              <button type="button" className="text-xs font-bold text-indigo-600 hover:text-indigo-700">
+                Forgot Password?
+              </button>
+            </div>
+
+            <Button
+              type="primary"
+              htmlType="submit"
+              size="large"
+              block
+              loading={loading}
+              className="h-12 bg-slate-900 hover:bg-slate-800 border-none flex items-center justify-center gap-2 text-base font-bold shadow-lg shadow-slate-200 transition-all active:scale-[0.98]"
+            >
+              Login to Dashboard <ArrowRight size={18} />
+            </Button>
+          </Form>
+
+          {/* FEATURES - Styled as verified list */}
+          <div className="mt-8 pt-6 border-t border-slate-100">
+            <ul className="space-y-3">
+              {[
+                "Manage payments & settlements",
+                "Real-time transaction tracking",
+                "Secure merchant dashboard"
+              ].map((feature, i) => (
+                <li key={i} className="flex items-center gap-3 text-sm font-medium text-slate-600">
+                  <CheckCircle2 size={16} className="text-green-500" />
+                  {feature}
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* REGISTER */}
+          <div className="mt-8 text-center">
+            <button
+              onClick={() => router.push("/register")}
+              className="group flex items-center justify-center gap-2 w-full py-3 rounded-xl border border-slate-200 text-slate-600 font-bold hover:bg-slate-50 hover:border-slate-300 transition-all"
+            >
+              <UserPlus size={18} className="text-slate-400 group-hover:text-slate-900" />
+              <span>Create Merchant Account</span>
+            </button>
+          </div>
+        </div>
+      </section>
       </main>
     </ConfigProvider>
   );
