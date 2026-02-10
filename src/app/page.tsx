@@ -71,13 +71,13 @@ export default function MerchantLogin() {
                   </span>
                 </div>
                 <Title level={2} className="!text-white !mb-6 !font-bold">Welcome Back!</Title>
-                <Paragraph className="text-slate-100 text-base leading-relaxed">
+                <Paragraph className="!text-slate-100 text-base leading-relaxed">
                   Log in to access your merchant dashboard and manage your business efficiently.
                 </Paragraph>
               </div>
               <div className="mt-12 p-5 bg-white/5 rounded-xl border border-white/10 backdrop-blur-sm">
-                <Text className="text-blue-300 text-[10px] block mb-2 uppercase tracking-[0.2em] font-bold">Security Status</Text>
-                <Text className="text-red-400 font-medium">Account: Secure</Text>
+                <Text className="!text-blue-300 text-[10px] block mb-2 uppercase tracking-[0.2em] font-bold">Security Status</Text>
+                <Text className="!text-red-400 font-medium">Account: Secure</Text>
               </div>
             </div>
 

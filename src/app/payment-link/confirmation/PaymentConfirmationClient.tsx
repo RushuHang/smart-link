@@ -62,15 +62,15 @@ export default function PaymentConfirmationClient() {
                 <Title level={2} className="!text-white !mb-6 !font-bold">
                   Link Ready!
                 </Title>
-                <Paragraph className="text-slate-100 text-base leading-relaxed">
+                <Paragraph className="!text-slate-100 text-base leading-relaxed">
                   Your secure payment link for <strong>{customerName || "your customer"}</strong> has been generated. You can copy or share it safely.
                 </Paragraph>
               </div>
               <div className="mt-12 p-5 bg-white/5 rounded-xl border border-white/10 backdrop-blur-sm">
-                <Text className="text-blue-300 text-[10px] block mb-2 uppercase tracking-[0.2em] font-bold">
+                <Text className="!text-blue-300 text-[10px] block mb-2 uppercase tracking-[0.2em] font-bold">
                   Status
                 </Text>
-                <Text className="text-green-400 font-medium">Ready to Send</Text>
+                <Text className="!text-green-400 font-medium">Ready to Send</Text>
               </div>
             </div>
 

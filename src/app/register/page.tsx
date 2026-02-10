@@ -104,7 +104,7 @@ export default function MerchantOnboarding() {
                 </div>
               </div>
               <div className="mt-12 p-5 bg-white/5 rounded-xl border border-white/10 backdrop-blur-sm">
-                <Text className="text-blue-300 text-[10px] block mb-2 uppercase tracking-[0.2em] font-bold">Security Status</Text>
+                <Text className="!text-blue-300 text-[10px] block mb-2 uppercase tracking-[0.2em] font-bold">Security Status</Text>
                 <Tag color="error" className="animate-pulse m-0 px-3 py-1 rounded-full border-none font-medium">Account: Unverified</Tag>
               </div>
             </div>
